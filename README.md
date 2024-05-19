@@ -3,7 +3,7 @@ This is a basic class to initialize and run the Igus Robolink Robot based on the
 
 ## It has the following capabilities:  
 - Initialize and automatic check if the robot is already referenced. Otherwise it will automatically run an referencing sequence  
-- run in cartesien coordinates to a relative (moveo) or absolute position (move). the callback is "done" if a defined position is done
+- run in cartesien coordinates to a relative (moveo) or absolute position (move) position. The callback is "done" if a defined position is reached
 - control an digital IO (i have a magnet atteched
 
 ## Limitations
