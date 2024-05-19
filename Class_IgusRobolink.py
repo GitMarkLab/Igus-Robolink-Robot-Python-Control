@@ -20,6 +20,7 @@ class IgusRobolink:
             'Message': "",
             'CRI_Status': "", 
             'GlobalPosition': '',
+            'RelativePosition': '',            
             'Error':'',
             'GlobalSpeed':'',
             'MotionStatus':''
@@ -373,6 +374,15 @@ class IgusRobolink:
                             parts[44] + " " + 
                             parts[45]
                         )
+
+                        self.status['RelativePosition'] = (
+                            str(float(parts[41]) - (self.robot_offset['y'])) + " " +  # x 40 and y 41 abs vertauscht
+                            str( -1*( float(parts[40]) - (self.robot_offset['x']))   )  + " " + 
+                            str(float(parts[42]) - (self.robot_offset['z'])   )  + " " + 
+                            str(float(parts[43]) - self.robot_offset['rx'] ) + " " + 
+                            str(float(parts[44]) - self.robot_offset['ry'] ) + " " + 
+                            str(float(parts[45]) - self.robot_offset['rz'] ) 
+                        )                        
                         self.status['Error'] = parts[80]
                         self.status['GlobalSpeed'] = parts[102]
 
