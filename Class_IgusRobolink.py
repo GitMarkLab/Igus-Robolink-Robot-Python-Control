@@ -23,8 +23,10 @@ class IgusRobolink:
             'RelativePosition': '',            
             'Error':'',
             'GlobalSpeed':'',
-            'MotionStatus':''
-            
+            'MotionStatus':'',
+            'ApproachSpeedX':0.0,
+            'ApproachSpeedY':0.0,
+            'ApproachSpeedZ':0.0,            
         }
         self.robot_position = {
             'x': 250.00, 
@@ -291,9 +293,23 @@ class IgusRobolink:
         self.messages_to_send.clear()
 
     def heartbeat(self,log):
-        messageAliveJog = "CRISTART 1234 ALIVEJOG 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 CRIEND"
+        x = self.status['ApproachSpeedX']
+        y = self.status['ApproachSpeedY']
+        z = self.status['ApproachSpeedZ']
+        #messageAliveJog = "CRISTART 1234 ALIVEJOG 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 CRIEND"
+        messageAliveJog = f"CRISTART 1234 ALIVEJOG  {x} {y} {z} 0.0 0.0 0.0 0.0 0.0 0.0 CRIEND"      
         self.cri_msg(messageAliveJog,log)
 
+    def approach_start(self,vector,speed):
+        #'ApproachSpeedX':0.0,
+        
+        self.status["ApproachSpeed" + vector.upper()] = speed
+        
+    def approach_stop(self):
+        #'ApproachSpeedX':0.0,
+        self.status["ApproachSpeedX"] = 0
+        self.status["ApproachSpeedY"] = 0
+        self.status["ApproachSpeedZ"] = 0
 
     def heartbeat_robot_speed(self,x=0,y=0,z=0,rx=0,ry=0,rz=0,log="False"):
         tes=0
