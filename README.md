@@ -1,5 +1,5 @@
 ### Class_IgusRobolink.py
-This is a basic class to initialize and run the Igus Robolink Robot.  
+This is a basic class to initialize and run the Igus Robolink Robot. In my case it is an RL-DCi-5S-M  
 It has the following capabilities:  
 - Initialize and automatic check if the robot is already referenced. Otherwise it will automatically run an referencing sequence  
 - run in cartesien coordinates to a relative (moveo) or absolute position (move). the callback is "done" if a defined position is done
