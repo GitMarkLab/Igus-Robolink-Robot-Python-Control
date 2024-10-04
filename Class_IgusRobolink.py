@@ -141,6 +141,17 @@ class IgusRobolink:
         comm="CRISTART 1234 CMD DOUT 24 true CRIEND"
         self.command_buffer_fill(comm)
 
+    def enable_dout(self,pin):
+        comm=f"CRISTART 1234 CMD DOUT {pin} true CRIEND"
+        self.command_buffer_fill(comm)
+
+
+    def disable_dout(self,pin):
+        comm=f"CRISTART 1234 CMD DOUT {pin} false CRIEND"
+        self.command_buffer_fill(comm)
+        time.sleep(2.0)
+
+    
 
     def disable_magnet(self):
         comm="CRISTART 1234 CMD DOUT 24 false CRIEND"
