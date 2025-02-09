@@ -56,12 +56,16 @@ class IgusRobolink:
         self.previous_status = {}
         self.messages_to_send = []
 
+
+    
+    def connect(self):
+
+
         print("Start thread")
         self.thread = threading.Thread(target=self._run)
         self.thread.daemon = True
         self.thread.start()   
-    
-    def connect(self):
+        
         print("Connect")
         #self.ip = ip   
         self.server_address = (self.ip, 3920)
