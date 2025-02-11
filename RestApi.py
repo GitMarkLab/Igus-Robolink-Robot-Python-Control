@@ -53,6 +53,16 @@ def connect():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
+@app.route('/disconnect', methods=['POST'])
+def disconnect():
+    print("Rest Disconnect")
+    try:
+        robot.disconnect()
+        return jsonify({"status": "success", "message": "Robot connected"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)})
+
+
 @app.route('/enable', methods=['POST'])
 def enable():
     try:
@@ -118,6 +128,29 @@ def receive_coordinates():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@app.route('/position', methods=['GET'])
+def get_position():
+    try:
+        # Abfrage der aktuellen Roboterposition
+        position = robot.get_status('RelativePosition')
+        # Beispiel: position könnte als String "240.0 165.9 176.7 -350.24 -0.0 360.0" zurückgegeben werden.
+        # Wir splitten den String in einzelne Werte und konvertieren sie in Float.
+        #position_values = list(map(float, position.split()))
+        position_values = [float(x) for x in position.split()]
+
+        # Strukturierte Antwort erstellen
+        response = {
+            "x": position_values[0],
+            "y": position_values[1],
+            "z": position_values[2],
+            "rx": position_values[3],
+            "ry": position_values[4],
+            "rz": position_values[5]
+        }
+        
+        return jsonify({"status": "success", "position": response})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 
 
