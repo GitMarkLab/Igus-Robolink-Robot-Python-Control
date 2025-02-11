@@ -7,13 +7,12 @@ import multiprocessing
 app = Flask(__name__)
 
 # basic commands to run the robot via Rest API
-# TODO is a callback eg. asking for the actual position
 
 ## curl -X POST http://localhost:5000/connect
 ## curl -X POST http://localhost:5000/enable
 ## curl -X POST http://localhost:5000/reference
 
-#curl -X POST http://192.168.3.11:5000 
+#curl -X POST http://localhost:5000/move \
 #     -H "Content-Type: application/json" 
 #     -d '{
 #           "x": 246.3,
@@ -38,10 +37,6 @@ app = Flask(__name__)
 #           "speed": 10
 #         }'
 
-
-
-
-# Roboter-Instanz
 robot = IgusRobolink("192.168.3.11")
 
 @app.route('/connect', methods=['POST'])
@@ -122,12 +117,9 @@ def receive_coordinates():
         coordinates = request.json.get("coordinates", [])
         if not isinstance(coordinates, list) or not all(isinstance(coord, list) and len(coord) == 3 for coord in coordinates):
             return jsonify({"status": "error", "message": "Invalid format. Expected [[x,y,z], [x,y,z], [x,y,z]]"}), 400
-        
-        # Hier kannst du die Koordinaten weiterverarbeiten, z. B. an einen Roboter senden
-        print(f"Received coordinates: {coordinates}")
-        #points[:] = coordinates
 
-        # 
+        print(f"Received coordinates: {coordinates}")
+        # TODO --> speed setpoint
         for coordinate in coordinates:  
             position = robot.get_status('RelativePosition')
             position_values = [float(x) for x in position.split()]
@@ -140,7 +132,7 @@ def receive_coordinates():
                 "rz":position_values[5],
     
             }
-            print("new pos: ",new_pos)
+            print("new posion from Array: ",new_pos)
             speed = 10
             robot.moveo(
                         new_pos["x"], 
@@ -151,13 +143,7 @@ def receive_coordinates():
                         new_pos["rz"], 
                         speed)
             
-        
-        #for point in coordinates:
-            # Hier könnte man eine Funktion aufrufen, die den Punkt an den Roboter sendet
-
-            #sleep(2)
-        
-        return jsonify({"status": "success", "message": "Coordinates received", "data": coordinates})
+            return jsonify({"status": "success", "message": "Coordinates received", "data": coordinates})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
@@ -165,14 +151,9 @@ def receive_coordinates():
 @app.route('/position', methods=['GET'])
 def get_position():
     try:
-        # Abfrage der aktuellen Roboterposition
         position = robot.get_status('RelativePosition')
-        # Beispiel: position könnte als String "240.0 165.9 176.7 -350.24 -0.0 360.0" zurückgegeben werden.
-        # Wir splitten den String in einzelne Werte und konvertieren sie in Float.
-        #position_values = list(map(float, position.split()))
         position_values = [float(x) for x in position.split()]
 
-        # Strukturierte Antwort erstellen
         response = {
             "x": position_values[0],
             "y": position_values[1],
