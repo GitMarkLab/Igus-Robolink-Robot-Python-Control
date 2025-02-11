@@ -88,6 +88,7 @@ def motion_type():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
+
 @app.route('/move', methods=['POST'])
 def move():
     try:
@@ -105,8 +106,15 @@ def move():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
-
-
+#curl -X POST http://localhost:5000/coordinates \
+#-H "Content-Type: application/json" \
+#-d '{
+#  "coordinates": [
+#    [240.0, 165.9, 176.7],
+#    [280.0, 200, 176.7],
+#    [240.0, 165.9, 176.7]
+#  ]
+#}'
 
 @app.route('/coordinates', methods=['POST'])
 def receive_coordinates():
@@ -117,7 +125,32 @@ def receive_coordinates():
         
         # Hier kannst du die Koordinaten weiterverarbeiten, z. B. an einen Roboter senden
         print(f"Received coordinates: {coordinates}")
-        points[:] = coordinates
+        #points[:] = coordinates
+
+        # 
+        for coordinate in coordinates:  
+            position = robot.get_status('RelativePosition')
+            position_values = [float(x) for x in position.split()]
+            new_pos = {
+                "x":coordinate[0],
+                "y":coordinate[1],
+                "z":coordinate[2],
+                "rx":position_values[3],
+                "ry":position_values[4],
+                "rz":position_values[5],
+    
+            }
+            print("new pos: ",new_pos)
+            speed = 10
+            robot.moveo(
+                        new_pos["x"], 
+                        new_pos["y"], 
+                        new_pos["z"], 
+                        new_pos["rx"], 
+                        new_pos["ry"], 
+                        new_pos["rz"], 
+                        speed)
+            
         
         #for point in coordinates:
             # Hier könnte man eine Funktion aufrufen, die den Punkt an den Roboter sendet
@@ -128,6 +161,7 @@ def receive_coordinates():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+# curl -X GET http://localhost:5000/position
 @app.route('/position', methods=['GET'])
 def get_position():
     try:
