@@ -1,0 +1,187 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Robot Control API",
+    "version": "1.0.0",
+    "description": "An API for controlling a robot with various commands."
+  },
+  "servers": [
+    {
+      "url": "https://2b9d-2a00-6020-4197-200-e9c2-b88b-d078-3073.ngrok-free.app",
+      "description": "Ngrok routed server"
+    }
+  ],
+  "paths": {
+    "/connect": {
+      "post": {
+        "operationId": "connectRobot",
+        "summary": "Connect to the robot",
+        "description": "Establishes a connection to the robot.",
+        "responses": {
+          "200": {
+            "description": "Robot connected successfully",
+            "content": {
+              "application/json": {
+                "example": {"status": "success", "message": "Robot connected"}
+              }
+            }
+          },
+          "500": {
+            "description": "Error connecting to the robot",
+            "content": {
+              "application/json": {
+                "example": {"status": "error", "message": "Error message"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enable": {
+      "post": {
+        "operationId": "enableRobot",
+        "summary": "Enable the robot",
+        "description": "Enables the robot for operation.",
+        "responses": {
+          "200": {
+            "description": "Robot enabled successfully",
+            "content": {
+              "application/json": {
+                "example": {"status": "success", "message": "Robot enabled"}
+              }
+            }
+          },
+          "500": {
+            "description": "Error enabling the robot",
+            "content": {
+              "application/json": {
+                "example": {"status": "error", "message": "Error message"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reference": {
+      "post": {
+        "operationId": "referenceJoints",
+        "summary": "Reference all joints",
+        "description": "References all joints of the robot.",
+        "responses": {
+          "200": {
+            "description": "All joints referenced successfully",
+            "content": {
+              "application/json": {
+                "example": {"status": "success", "message": "All joints referenced"}
+              }
+            }
+          },
+          "500": {
+            "description": "Error referencing joints",
+            "content": {
+              "application/json": {
+                "example": {"status": "error", "message": "Error message"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/motion_type": {
+      "post": {
+        "operationId": "setMotionType",
+        "summary": "Set motion type",
+        "description": "Sets the motion type for the robot.",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "default": "cartesian",
+                    "description": "The type of motion (e.g., cartesian or joint)."
+                  }
+                }
+              },
+              "example": {"type": "cartesian"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Motion type set successfully",
+            "content": {
+              "application/json": {
+                "example": {"status": "success", "message": "Motion type set to cartesian"}
+              }
+            }
+          },
+          "500": {
+            "description": "Error setting motion type",
+            "content": {
+              "application/json": {
+                "example": {"status": "error", "message": "Error message"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/move": {
+      "post": {
+        "operationId": "moveRobot",
+        "summary": "Move the robot",
+        "description": "Executes a movement command for the robot.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "x": {"type": "number", "description": "X-coordinate", "default": 0},
+                  "y": {"type": "number", "description": "Y-coordinate", "default": 0},
+                  "z": {"type": "number", "description": "Z-coordinate", "default": 0},
+                  "rx": {"type": "number", "description": "Rotation around X", "default": 0},
+                  "ry": {"type": "number", "description": "Rotation around Y", "default": 0},
+                  "rz": {"type": "number", "description": "Rotation around Z", "default": 0},
+                  "speed": {"type": "integer", "description": "Speed of movement", "default": 100}
+                }
+              },
+              "example": {
+                "x": 10.0,
+                "y": 20.0,
+                "z": 30.0,
+                "rx": 0.5,
+                "ry": 1.0,
+                "rz": 1.5,
+                "speed": 100
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Movement executed successfully",
+            "content": {
+              "application/json": {
+                "example": {"status": "success", "message": "Movement executed"}
+              }
+            }
+          },
+          "500": {
+            "description": "Error executing movement",
+            "content": {
+              "application/json": {
+                "example": {"status": "error", "message": "Error message"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

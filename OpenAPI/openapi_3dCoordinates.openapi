@@ -1,0 +1,79 @@
+openapi: 3.1.0
+info:
+  title: Room Visualizer API
+  description: API zur Verarbeitung und Visualisierung von 3D-Koordinaten.
+  version: 1.0.0
+servers:
+  - url: https://2b9d-2a00-6020-4197-200-e9c2-b88b-d078-3073.ngrok-free.app
+    description: Lokaler Entwicklungsserver
+paths:
+  /coordinates:
+    post:
+      operationId: receiveCoordinates
+      summary: Empfängt 3D-Koordinaten und aktualisiert die Visualisierung.
+      description: |
+        Diese API erwartet eine Liste von 3D-Koordinaten im Format `[[x, y, z], [x, y, z], ...]`.
+        Die Punkte werden in der Visualisierung aktualisiert.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                coordinates:
+                  type: array
+                  items:
+                    type: array
+                    items:
+                      type: number
+                    minItems: 3
+                    maxItems: 3
+              required:
+                - coordinates
+      responses:
+        '200':
+          description: Erfolgreiche Verarbeitung der Koordinaten.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Coordinates received
+                  data:
+                    type: array
+                    items:
+                      type: array
+                      items:
+                        type: number
+        '400':
+          description: Ungültiges Format der Anfragedaten.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Invalid format. Expected [[x,y,z], [x,y,z], [x,y,z]]
+        '500':
+          description: Interner Serverfehler.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: Internal server error.

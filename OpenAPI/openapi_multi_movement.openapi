@@ -1,0 +1,165 @@
+openapi: 3.0.0
+info:
+  title: Beispiel REST API
+  version: 1.0.0
+  description: Eine einfache REST API, die über ngrok erreichbar ist
+servers:
+  - url: https://{ngrok-id}.ngrok.io
+    description: ngrok Tunnel Server
+paths:
+  /move_absolute:
+    post:
+      summary: Bewegt den Roboter zu absoluten Koordinaten
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                coordinates:
+                  type: object
+                  properties:
+                    x:
+                      type: number
+                    y:
+                      type: number
+                    z:
+                      type: number
+                    rx:
+                      type: number
+                    ry:
+                      type: number
+                    rz:
+                      type: number
+                speed:
+                  type: number
+      responses:
+        '200':
+          description: Erfolgreiche Bewegung
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+  /move_relative:
+    post:
+      summary: Bewegt den Roboter relativ zur aktuellen Position
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                coordinates:
+                  type: object
+                  properties:
+                    x:
+                      type: number
+                    y:
+                      type: number
+                    z:
+                      type: number
+                    rx:
+                      type: number
+                    ry:
+                      type: number
+                    rz:
+                      type: number
+                speed:
+                  type: number
+      responses:
+        '200':
+          description: Erfolgreiche Bewegung
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+  /move_sleep_position:
+    post:
+      summary: Bewegt den Roboter in die Schlafposition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                speed:
+                  type: number
+      responses:
+        '200':
+          description: Erfolgreiche Bewegung zur Schlafposition
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  sleep_position:
+                    type: object
+                    properties:
+                      x:
+                        type: number
+                      y:
+                        type: number
+                      z:
+                        type: number
+                      rx:
+                        type: number
+                      ry:
+                        type: number
+                      rz:
+                        type: number
+  /move_reference_position:
+    post:
+      summary: Bewegt den Roboter in die Referenzposition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                speed:
+                  type: number
+      responses:
+        '200':
+          description: Erfolgreiche Bewegung zur Referenzposition
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  reference_position:
+                    type: object
+                    properties:
+                      x:
+                        type: number
+                      y:
+                        type: number
+                      z:
+                        type: number
+                      rx:
+                        type: number
+                      ry:
+                        type: number
+                      rz:
+                        type: number
