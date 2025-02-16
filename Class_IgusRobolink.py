@@ -235,7 +235,27 @@ class IgusRobolink:
         if id != '':
             self.robot_limits[id]= str(val)
             
+    def ReferenceJointsCustomSequence(self,sequence = [1,2,3,4]):
+        # Control the sequence of axis referencing procedure
+        self.status['ReferenceAllReached'] = False
+        for axis in sequence:
+            #print("Reference Axis A",axis)
+            move_thread = threading.Thread(target=self.ReferenceSingleJoint(axis))
+            move_thread.start()
+            move_thread.join() 
+        # TODO read baxl status instead of set status "blindly"
+        self.status['ReferenceAllReached'] = True
+        
+    def ReferenceSingleJoint(self,Index,Type="A"):
+        print(f"Reference single joint", Type ,Index )
 
+        comm="CRISTART 1234 CMD Enable CRIEND"
+        self.command_buffer_fill(comm)
+        time.sleep(1.5)
+        comm="CRISTART 1234 CMD ReferenceSingleJoint " + Type + str(Index) + "CRIEND"
+        self.command_buffer_fill(comm)
+        # todo wait for callback
+        time.sleep(5)
     
     
     def SetFlag_ReferenceAllJoints(self,flag):
