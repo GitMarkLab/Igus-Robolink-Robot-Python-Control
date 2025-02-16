@@ -1,0 +1,296 @@
+openapi: 3.1.0
+info:
+  title: Igus Robolink API
+  description: REST API zur Steuerung des Igus Robolink Roboters.
+  version: 1.0.0
+servers:
+  - url: https://f6f7-2a00-6020-4197-200-a818-6364-f6f3-9149.ngrok-free.app
+    description: Lokaler Server für den Roboter
+
+paths:
+  /connect:
+    post:
+      operationId: connectRobot
+      summary: Verbindet sich mit dem Roboter.
+      responses:
+        '200':
+          description: Verbindung erfolgreich hergestellt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+
+  /disconnect:
+    post:
+      operationId: disconnectRobot
+      summary: Trennt die Verbindung zum Roboter.
+      responses:
+        '200':
+          description: Verbindung erfolgreich getrennt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+
+  /enable:
+    post:
+      operationId: enableRobot
+      summary: Aktiviert den Roboter.
+      responses:
+        '200':
+          description: Roboter erfolgreich aktiviert
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+
+  /reference:
+    post:
+      operationId: referenceAllJoints
+      summary: Referenziert alle Gelenke des Roboters.
+      responses:
+        '200':
+          description: Gelenke erfolgreich referenziert
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+
+  /motion_type:
+    post:
+      operationId: setMotionType
+      summary: Setzt den Bewegungstyp des Roboters.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [cartesian, joint]
+                  default: cartesian
+      responses:
+        '200':
+          description: Bewegungstyp erfolgreich gesetzt
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+
+  /position:
+    get:
+      operationId: getPosition
+      summary: Holt die aktuelle Position des Roboters.
+      responses:
+        '200':
+          description: Erfolgreiche Positionsabfrage
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  position:
+                    type: object
+                    properties:
+                      x: { type: number }
+                      y: { type: number }
+                      z: { type: number }
+                      rx: { type: number }
+                      ry: { type: number }
+                      rz: { type: number }
+
+  /move_positionarray_speed:
+    post:
+      operationId: movePositionArraySpeed
+      summary: Bewegt den Roboter entlang einer Liste von Koordinaten mit einer bestimmten Geschwindigkeit.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                coordinates:
+                  type: array
+                  items:
+                    type: array
+                    items:
+                      type: number
+                    minItems: 3
+                    maxItems: 3
+                speed:
+                  type: number
+                  default: 10
+      responses:
+        '200':
+          description: Bewegung erfolgreich
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      coordinates:
+                        type: array
+                        items:
+                          type: array
+                          items:
+                            type: number
+                      speed:
+                        type: number
+
+  /move_relative:
+    post:
+      operationId: moveRelative
+      summary: Bewegt den Roboter relativ zu seiner aktuellen Position.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                coordinates:
+                  type: object
+                  properties:
+                    x: { type: number }
+                    y: { type: number }
+                    z: { type: number }
+                    rx: { type: number }
+                    ry: { type: number }
+                    rz: { type: number }
+                speed:
+                  type: number
+                  default: 10
+      responses:
+        '200':
+          description: Relativbewegung erfolgreich
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  new_position:
+                    type: object
+                    properties:
+                      x: { type: number }
+                      y: { type: number }
+                      z: { type: number }
+                      rx: { type: number }
+                      ry: { type: number }
+                      rz: { type: number }
+
+  /move_sleep_position:
+    post:
+      operationId: moveSleepPosition
+      summary: Bewegt den Roboter in eine Schlafposition.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                speed:
+                  type: number
+                  default: 10
+      responses:
+        '200':
+          description: Roboter bewegt sich zur Schlafposition
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  sleep_position:
+                    type: object
+                    properties:
+                      x: { type: number }
+                      y: { type: number }
+                      z: { type: number }
+                      rx: { type: number }
+                      ry: { type: number }
+                      rz: { type: number }
+                  speed:
+                    type: number
+
+  /move_reference_position:
+    post:
+      operationId: moveReferencePosition
+      summary: Bewegt den Roboter in eine Referenzposition.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                speed:
+                  type: number
+                  default: 10
+      responses:
+        '200':
+          description: Roboter bewegt sich zur Referenzposition
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  reference_position:
+                    type: object
+                    properties:
+                      x: { type: number }
+                      y: { type: number }
+                      z: { type: number }
+                      rx: { type: number }
+                      ry: { type: number }
+                      rz: { type: number }
+                  speed:
+                    type: number
